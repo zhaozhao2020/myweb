@@ -1,0 +1,315 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Index";
+   
+
+}
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="zh" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="zh" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="zh">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale =1.0" name="viewport" />
+    @Html.Partial("_Title")
+    @Html.Raw(ViewBag.CssFile)
+    @using Git.Storage.Entity.ZaiLiuKa;
+    <style>
+        form {
+            border: midnightblue 2px solid;
+            padding: 30px 50px;
+            background: mintcream;
+            width: 670px;
+            border-radius: 15px;
+        }
+
+        div#table {
+            border: midnightblue 2px solid;
+            width: 1000px;
+            border-radius: 15px;
+            padding: 20px 20px;
+        }
+
+        th {
+            border: midnightblue 2px solid;
+            border-radius: 5px;
+            background: cornflowerblue;
+        }
+
+        td {
+            border: midnightblue 0.5px solid;
+            width: auto;
+            background: cornflowerblue;
+        }
+
+        tr {
+            border: midnightblue 2px solid;
+            border-radius: 5px;
+            background: cornflowerblue;
+        }
+
+        fieldset {
+            border: 0px;
+            margin: auto auto;
+            width: 670px;
+            border-radius: 0px;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var province = document.getElementById('province');
+            var city = document.getElementById('city');
+            var provinceArr = [];
+            provinceArr[0] = ['東京都'];
+            provinceArr[1] = ['神奈川県'];
+            provinceArr[2] = ['三重県'];
+            provinceArr[3] = ['新潟県'];
+            provinceArr[4] = ['大阪府'];
+
+            for (var key in provinceArr) {
+                var provinceOption = document.createElement('option');
+                provinceOption.text = provinceArr[key];
+                province.options.add(provinceOption);
+
+            }
+
+            $.gitAjax({
+                type: "POST",
+                url: "/ZaiLiuKa/ZaiLiuKaAjax/SearchAll",
+                dataType: "json",
+                success: function (result) {
+                   if (result!=null) {
+
+                        var Html = "";
+
+                        $(result).each(function (i, item) {
+                           
+                            Html += "<tr>";
+                            Html += "<td>" + item.ZaiLiuKaNo + "</td>";
+                            Html += "<td>" + item.UserName + "</td>";
+                            Html += "<td>" + item.Birthday + "</td>";
+                            Html += "<td>" + item.Sex + "</td>";
+                            Html += "<td>" + item.Qualification + "</td>";
+                            Html += "<td>" + item.Adress + "</td>";
+                            Html += "<td>" + item.Motivation + "</td>";
+                            Html += "<td>" + item.PermitDay + "</td>";
+                            Html += "<td><button onclick='toEditPage("+i+")'>編集</button></td>";
+                            Html += "<td><button type='submit' onclick='deleteAjax(this.id)' id='" + i + "'>削除</button></td>";
+                            Html += "<td><input type='checkbox' id='zai" + i + "'> </td>";
+                            Html += "</tr>";
+                        })
+                        $("#tbb").html(Html);
+                    }
+                    else {
+                        document.getElementById("tbb").textContent = null;
+                    }
+
+                },
+
+                error: function () {
+                    alert("アクセス失敗しました！");
+
+                }
+
+            });
+
+        }
+
+    </script>
+    <script src="\Theme\customer\ZaiLiuKa\Git.Storage.ZaiLiuKa.js"></script>
+</head>
+<body class="fixed-top">
+    @Html.Partial("_Top")
+    <div id="container" class="row-fluid @ViewBag.MenuStatus">
+        @Html.Partial("_LeftMenu")
+        <div id="body">
+            <div id="widget-config" class="modal hide">
+                <div class="modal-header">
+                    <button data-dismiss="modal" class="close" type="button"></button>
+                    <h3>widget Settings</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Here will be a configuration form</p>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
+                        @Html.Raw(ViewBag.NavMenu)
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="widget box light-grey">
+                            <div class="widget-title">
+                                <h4><i class="icon-globe"></i>在留卡管理</h4>
+                                <div class="actions">
+                                </div>
+                            </div>
+                            <div class="widget-body">
+                                <div class="row-fluid">
+                                    <fieldset>
+                                        <form action="/ZaiLiuKa/ZaiLiuKa/Index" name="searchForm" id="searchForm" method="post">
+                                            <center>在留カード情報一覧</center><br><br>
+
+                                            <label for="zaiLiuKaNo">在留番号</label>
+                                            <input type="text" id="zaiLiuKaNo" name="zaiLiuKaNo" maxlength="12" onblur="changeId(this.value)">&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <label for="userName">氏名</label>
+                                            <input type="text" id="userName" name="userName" onblur="changeUserName(this.value)"> <br /><br />
+                                            <label for="sex">性別</label>
+                                            <input type="radio"  name="sex" value="0" onclick="sexAjax(this.value)" />男    <input type="radio" name="sex" value="1" onclick="sexAjax(this.value)">女<br><br>
+                                            <label>在留資格</label>
+                                            <input type="checkbox" name="qualification" value="0">技術・人文知識・国際業務
+                                            <input type="checkbox" name="qualification" value="1">留学
+                                            <input type="checkbox" name="qualification" value="2">定住者
+                                            <input type="checkbox" name="qualification" value="3">永住者
+                                            <input type="checkbox" name="qualification" value="4">家族滞在
+                                            <input type="checkbox" name="qualification" value="5">経営·管理<br /><br />
+                                            <label>志望動機</label>
+                                            <input type="checkbox" id="motivation1" name="motivation" value="0">旅行する
+                                            <input type="checkbox" id="motivation2" name="motivation" value="1">留学する
+                                            <input type="checkbox" id="motivation3" name="motivation" value="2">研修する
+                                            <input type="checkbox" id="motivation4" name="motivation" value="3">仕事する
+                                            <input type="checkbox" id="motivation5" name="motivation" value="4">投資貿易
+                                            <input type="checkbox" id="motivation6" name="motivation" value="5">外交行政<br /><br />
+                                            <label for="birthday">生年月日</label>
+                                            <input type="date" name="birthday" id="birthday">~<input type="date" name="" id=""><br /> <br />
+                                            <label>許可期間</label>
+                                            <input type="date" name="permitStart" id="permitStart">~<input type="date" name="permitEnd" id="permitEnd"><br /> <br />
+                                            <label for="adress">居住地</label>
+                                            <select name="adress" id="province" onchange="searchProvinceChange()">
+                                                <option value="0" selected="selected">都道府県</option>
+                                            </select>
+                                            <select name="adress" id="city">
+                                                <option value="0" selected="selected">市区</option>
+                                            </select><br /> <br />
+                                            <center><button type="submit" id="searchBtn">検索</button></center>
+                                        </form>
+                                    </fieldset>
+
+                                </div>
+
+                                <div id="table" class="">
+                                    <!--startprint1-->
+                                    <table class="searchTable" id="table1">
+                                        <thead id="tb">
+                                            <tr>
+                                                <th>在留番号(s)</th>
+                                                <th>氏名(s)</th>
+                                                <th>生年月日(s)</th>
+                                                <th>性别(s)</th>
+                                                <th>在留資格(s)</th>
+                                                <th>居住地(s)</th>
+                                                <th>志望動機(s)</th>
+                                                <th>許可期間(s)</th>
+                                                <th>編集</th>
+                                                <th>削除</th>
+                                                <th><input type="button" value="選択" onclick="selectAll()"></th>
+                                            </tr>
+                                           
+
+                                        </thead>
+                                        <tbody id="tbb" >
+                                            <tr id="tr1" hidden>
+                                                <td>在留番号(s)</td>
+                                                <td>氏名(s)</td>
+                                                <td>生年月日(s)</td>
+                                                <td>性别(s)</td>
+                                                <td>在留資格(s)</td>
+                                                <td>居住地(s)</td>
+                                                <td>志望動機(s)</td>
+                                                <td>許可期間(s)</td>
+                                                <td>編集</td>
+                                                <td>削除</td>
+                                                <td><input type="button" value="選択"></td>
+                                            </tr>
+                                            @{
+
+                                                if (ViewBag.List != null)
+                                                {
+                                                    if (ViewBag.List.Count >= 1)
+                                                    {
+                                                        int i = 0;
+                                                        List<ZailiukaDto> list = ViewBag.List;
+                                                        foreach (ZailiukaDto dto in list)
+                                                        {
+                                                            
+                                                            <tr>
+                                                                <td>@dto.ZaiLiuKaNo</td>
+                                                                <td>@dto.UserName</td>
+                                                                <td>@dto.Birthday</td>
+                                                                <td>@dto.Sex</td>
+                                                                <td>@dto.Qualification</td>
+                                                                <td>@dto.Adress</td>
+                                                                <td>@dto.Motivation</td>
+                                                                <td>@dto.PermitDay</td>
+                                                                <td><button onclick="toEditPage()">編集</button></td>
+                                                                <td><button type="submit" onclick="deleteAjax(this.id)" id='@i'>削除</button></td>
+                                                                <td><input type="checkbox" name='@i' id='zai+@i' value='@dto.ZaiLiuKaNo'>
+                                                                    <input type="checkbox" name='@i' value='@dto.UserName' hidden>
+                                                                    <input type="checkbox" name='@i' value='@dto.Birthday' hidden>
+                                                                    <input type="checkbox" name='@i' value='@dto.Sex' hidden>
+                                                                    <input type="checkbox" name='@i' value='@dto.Qualification' hidden>
+                                                                    <input type="checkbox" name='@i' value='@dto.Adress' hidden>
+                                                                    <input type="checkbox" name='@i' value='@dto.Motivation' hidden>
+                                                                    <input type="checkbox" name='@i' value='@dto.PermitDay' hidden>
+                                                                    <input type="checkbox" name='ra' hidden> 
+                                                                </td>
+                                                            </tr>
+                                                            i++;
+                                                           
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                   
+
+                                    <!--endprint1-->
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    表示件数：<button id="page5" onclick="displayPage(this.innerHTML)">5</button>   <button id="page10" onclick="displayPage(this.innerHTML)">10</button>    <button id="page15" onclick="displayPage(this.innerHTML)">15</button>
+
+                                    <input type="button" id="before" value="＜前へ" onclick="addBeforePage()">
+                                    <span id="pages">
+                                        <script>
+
+                                            for (var i = 1; i <= 10; i++) {
+                                                document.write("<button name='page' onclick='pageClick(" + i + ")'>" + i + "</button>");
+
+                                            }
+                                        </script>
+                                    </span>
+
+                                    <input type="button" id="after" value="後へ＞" onclick="addAfterPage()"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="submit" id="register" name="register" value="新規登録" onclick="pageChange()">&nbsp;&nbsp;&nbsp;
+                                    <input type="button" name='export' value="印刷" onclick="preview(1)">&nbsp;&nbsp;&nbsp;
+                                    <input type="button" id="csv" value="CSV_DL" onclick="createCSV()">&nbsp;&nbsp;&nbsp;
+                                    <input type="button" id="deleteAll" value="一括削除" onclick="CheckedDeleteAjax()">
+
+
+
+                                </div>
+
+                                <div class="row-fluid" id="mypager">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("_Foot")
+
+</body>
+</html>

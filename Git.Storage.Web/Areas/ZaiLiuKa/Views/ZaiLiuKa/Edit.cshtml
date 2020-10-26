@@ -1,0 +1,292 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Edit";
+    
+}
+
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="zh" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="zh" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="zh">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    @Html.Partial("_Title")
+    @Html.Raw(ViewBag.CssFile)
+    @using Git.Storage.Entity.ZaiLiuKa;
+    <style>
+        label {
+            width: 170px;
+            display: inline-block;
+            text-align: right;
+            padding-right: 25px;
+        }
+
+        form {
+            border: forestgreen 12px solid;
+            padding: 80px 50px;
+            background: #dddddd;
+            width: 650px;
+            border-radius: 0px;
+        }
+
+        fieldset {
+            border: 0px;
+            margin: auto auto;
+            width: 550px;
+            border-radius: 0px;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+
+        
+@{
+    ZailiukaDto dto = ViewBag.Dto;
+    string[] birth=dto.Birthday.Split('/');
+    string birth2 = birth[2].Substring(0, 2);
+    string[] pe = dto.PermitDay.Split('~', ',');
+    string[] ad = dto.Adress.Split(',');
+} 
+            if ('@dto.Sex' == 0) {
+                document.getElementById("man").checked = true;
+            }
+            if ('@dto.Sex' == 1) {
+                document.getElementById("woman").checked = true;
+            }
+
+            if ('@dto.Qualification' == 0) {
+                document.getElementById("status - esinhis").selected = true;
+            }
+
+            if ('@dto.Qualification' == 1) {
+                document.getElementById("status-overseasStudy").selected = true;
+            }
+            if ('@dto.Qualification' == 2) {
+                document.getElementById("status-Anchorperson").selected = true;
+            }
+            if ('@dto.Qualification' == 3) {
+                document.getElementById("status-permanentResident").selected = true;
+            }
+            if ('@dto.Qualification' == 4) {
+                document.getElementById("status-familyStay").selected = true;
+            }
+            if ('@dto.Qualification' == 5) {
+                document.getElementById("status-operationManagement").selected = true;
+            }
+
+            if ('@dto.Motivation' == 0) {
+                document.getElementById("motivation0").checked = true;
+            }
+            if ('@dto.Motivation' == 1) {
+                document.getElementById("motivation1").checked = true;
+            }
+            if ('@dto.Motivation' == 2) {
+                document.getElementById("motivation2").checked = true;
+            }
+            if ('@dto.Motivation' == 3) {
+                document.getElementById("motivation3").checked = true;
+            }
+            if ('@dto.Motivation' == 4) {
+                document.getElementById("motivation4").checked = true;
+            }
+            if ('@dto.Motivation' == 5) {
+                document.getElementById("motivation5").checked = true;
+            }
+
+
+
+
+
+
+            var province = document.getElementById('province');
+            var city = document.getElementById('city');
+            var provinceArr = [];
+            provinceArr[0] = ['東京都'];
+            provinceArr[1] = ['神奈川県'];
+            provinceArr[2] = ['三重県'];
+            provinceArr[3] = ['新潟県'];
+            provinceArr[4] = ['大阪府'];
+
+            for (var key in provinceArr) {
+                var provinceOption = document.createElement('option');
+                provinceOption.text = provinceArr[key];
+                province.options.add(provinceOption);
+
+            }
+
+
+            var date = new Date();
+            var nowYear = date.getFullYear();
+            var birthYYYY = document.getElementById('birthYYYY');
+            var birthMM = document.getElementById('birthMM');
+            var birthDD = document.getElementById('birthDD');
+
+            var permitStartYYYY = document.getElementById('permit-startYYYY');
+            var permitStartMM = document.getElementById('permit-startMM');
+            var permitStartDD = document.getElementById('permit-startDD');
+
+            var permitEndYYYY = document.getElementById('permit-endYYYY');
+            var permitEndMM = document.getElementById('permit-endMM');
+            var permitEndDD = document.getElementById('permit-endDD');
+
+            for (var i = nowYear + 20; i >= nowYear - 50; i--) {
+                var optionBirthYear = document.createElement('option');
+                var optionPermitStartYear = document.createElement('option');
+                var optionPermitEndYear = document.createElement('option');
+
+                optionBirthYear.text = i.toString();
+                optionPermitStartYear.text = i.toString();
+                optionPermitEndYear.text = i.toString();
+
+                optionBirthYear.value = i;
+                optionPermitStartYear.value = i;
+                optionPermitEndYear.value = i;
+
+                birthYYYY.options.add(optionBirthYear);
+                permitStartYYYY.options.add(optionPermitStartYear);
+                permitEndYYYY.options.add(optionPermitEndYear);
+
+            }
+        }
+
+
+
+    
+    </script>
+    <script src="\Theme\customer\ZaiLiuKa\Git.Storage.ZaiLiuKa.js"></script>
+</head>
+<body class="fixed-top">
+    @Html.Partial("_Top")
+    <div id="container" class="row-fluid @ViewBag.MenuStatus">
+        @Html.Partial("_LeftMenu")
+        <div id="body">
+            <div id="widget-config" class="modal hide">
+                <div class="modal-header">
+                    <button data-dismiss="modal" class="close" type="button"></button>
+                    <h3>widget Settings</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Here will be a configuration form</p>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
+                        @Html.Raw(ViewBag.NavMenu)
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="widget box light-grey">
+                            <div class="widget-title">
+                                <h4><i class="icon-globe"></i>在留卡管理</h4>
+                                <div class="actions">
+                                </div>
+                            </div>
+                            <div class="widget-body">
+                                <div class="row-fluid" style="margin:auto auto;">
+
+                                    <fieldset>
+                                        <form action="/ZaiLiuKa/ZaiLiuKa/Change" name="userEdit" id="userEdit" method="post">
+                                            <center style="font-size:large"><b>在留カード登録</b></center><br><br>
+                                            <label for="userId">在留番号:</label>
+                                            <input type="text" id="userId" maxlength="12" value="@dto.ZaiLiuKaNo" name="zaiLiuKaNo" onblur="changeId(this.value)"><br><br>
+
+                                            <label for="userName">氏名:</label>
+                                            <input type="text" id="userName" value="@dto.UserName" name="userName" maxlength="12" onblur="changeUserName(this.value)"> <br><br>
+
+                                            <label for="userBirth">生年月日:</label>
+                                            <select name="birthday" id="birthYYYY" onchange="changeYYYY()" style="width:80px">
+                                                <option>@birth[0]</option>
+                                            </select>&nbsp;年&nbsp;&nbsp;&nbsp;
+
+                                            <select name="birthday" id="birthMM" onchange="changeBirthMM()" style="width:80px">
+                                                <option value="-1">@birth[1]</option>
+                                            </select>&nbsp;月&nbsp;&nbsp;&nbsp;
+
+                                            <select name="birthday" id="birthDD" onchange="" style="width:80px">
+                                                <option value="-1">@birth2</option>
+                                            </select>&nbsp;日<br><br>
+
+                                            <label for="sex">性別:</label>
+                                            <input type="radio" id="man" name="sex" value="0">男&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="radio" id="woman" name="sex" value="1">女<br><br>
+
+                                            <label for="Eligibility">在留資格</label>
+                                            <select name="qualification" id="Eligibility">
+                                                <option id="status-esinhis" value="0">技術・人文知識・国際業務</option>
+                                                <option id="status-overseasStudy" value="1">留学</option>
+                                                <option id="status-Anchorperson" value="2">定住者</option>
+                                                <option id="status-permanentResident" value="3">永住者</option>
+                                                <option id="status-familyStay" value="4">家族滞在</option>
+                                                <option id="status-operationManagement" value="5">経営·管理</option>
+                                            </select><br><br>
+
+                                            <label for="adress">居住地：</label>
+                                            <select name="adress" id="province" onchange="searchProvinceChange()">
+                                                <option value="0" selected="selected">@ad[0]</option>
+                                            </select>
+                                            <select name="adress" id="city">
+                                                <option value="0" selected="selected">@ad[1]</option>
+                                            </select><br /> <br />
+
+                                            <label for="motivation">志望動機(多選):</label>
+                                            <input type="checkbox" id="motivation0" name="motivation" value="0">旅行する &nbsp;&nbsp;
+                                            <input type="checkbox" id="motivation1" name="motivation" value="1">留学する &nbsp;&nbsp;
+                                            <input type="checkbox" id="motivation2" name="motivation" value="2">研修する <br><label></label>
+                                            <input type="checkbox" id="motivation3" name="motivation" value="3">仕事する&nbsp;&nbsp;&nbsp;
+                                            <input type="checkbox" id="motivation4" name="motivation" value="4">投資貿易&nbsp;&nbsp;&nbsp;
+                                            <input type="checkbox" id="motivation5" name="motivation" value="5">外交行政<br><br>
+
+                                            <label for="permitStart">許可期間(交付日):</label>
+                                            <select name="permitStart" id="permit-startYYYY" onchange="changeYYYY()" style="width:80px">
+                                                <option value="-1">@pe[0]</option>
+                                            </select>&nbsp;年&nbsp;&nbsp;&nbsp;
+
+                                            <select name="permitStart" id="permit-startMM" onchange="changePermitStartMM()" style="width:80px">
+                                                <option value="-1">@pe[1]</option>
+                                            </select>&nbsp;月&nbsp;&nbsp;&nbsp;
+
+                                            <select name="permitStart" id="permit-startDD" style="width:80px">
+                                                <option value="-1">@pe[2]</option>
+                                            </select>&nbsp;日<br><br>
+
+                                            <label for="permitEnd">在留期間(満了日):</label>
+                                            <select name="permitEnd" id="permit-endYYYY" style="width:80px" onchange="changeYYYY()">
+                                                <option value="-1">@pe[3]</option>
+                                            </select>&nbsp;年&nbsp;&nbsp;&nbsp;
+
+                                            <select name="permitEnd" id="permit-endMM" onchange="changePermitEndMM()" style="width:80px">
+                                                <option value="-1">@pe[4]</option>
+                                            </select>&nbsp;月&nbsp;&nbsp;&nbsp;
+
+                                            <select name="permitEnd" id="permit-endDD" style="width:80px">
+                                                <option value="-1">@pe[5]</option>
+                                            </select>&nbsp;日<br><br>
+                                            <center><button type="submit" id="registerButton" onclick="editAjax()"><b>変更</b></button></center>
+                                        </form>
+                                    </fieldset>
+
+
+                                </div>
+
+
+
+                                <div class="row-fluid" id="mypager">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("_Foot")
+    
+</body>
+
+</html>
