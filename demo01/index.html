@@ -3,14 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <script src="../node_modules/react/umd/react.development.js"></script>
-    <script src="../node_modules/react-dom/umd/react-dom.development.js></script>
+    <script src="../node_modules/react-dom/umd/react-dom.development.js"></script>
     <script src="../build/babel.min.js"></script>
   </head>
   <body>
     <div id="example"></div>
-    <script type="text/babel">
+    
+    <script>
+      const title = React.createElement("h1", null, "zhaolina")
       ReactDOM.render(
-        <h1>Hello, world!!</h1>,
+        title,
         document.getElementById('example')
       );
     </script>
